@@ -65,3 +65,61 @@ $$437_{10} = 0b\underbrace{1}_1\underbrace{1011}_B\underbrace{0101}_5 = 1B5_{16}
 
 7.
 $$0x0123 = 0b\underbrace{0000}_0\underbrace{0001}_1\underbrace{0010}_2\underbrace{0011}_3 = 0b100100011 = 2^0 + 2^1 + 2^5 + 2^8 = 291_{10}$$
+
+(b) Convert the following numbers from hex to binary:
+1. 0xD3AD
+2. 0xB33F
+3. 0x7EC4
+
+**Ans**:
+
+1.
+$$0xD3AD = 0b\underbrace{1101}_D\underbrace{0011}_3\underbrace{1010}_A\underbrace{1101}_D = 0b1101001110101101$$
+
+2.
+$$0xB33F = 0b\underbrace{1011}_B\underbrace{0011}_3\underbrace{0011}_3\underbrace{1111}_F = 0b1011001100111111$$
+
+3.
+$$0x7EC4 = 0b\underbrace{0111}_7\underbrace{1110}_E\underbrace{1100}_C\underbrace{0100}_4 = 0b111111011000100$$
+
+(c) Write the following numbers using IEC prefixes:
+
+- $2^{16}$
+- $2^{34}$
+- $2^{27}$
+- $2^{61}$
+- $2^{43}$
+- $2^{47}$
+- $2^{36}$
+- $2^{59}$
+
+**Ans**: 
+
+- $2^{16} = 2^6 \times 2^{10} = 64 Ki$
+- $2^{34} = 2^4 \times 2^{30} = 16 Gi$
+- $2^{27} = 2^7 \times 2^{20} = 128 Mi$
+- $2^{61} = 2^1 \times 2^{60} = 2 Ei$
+- $2^{43} = 2^3 \times 2^{40} = 8 Ti$
+- $2^{47} = 2^7 \times 2^{40} = 128 Ti$
+- $2^{36} = 2^6 \times 2^{30} = 64 Gi$
+- $2^{59} = 2^9 \times 2^{50} = 512 Pi$
+
+(d) Write the following numbers as powers of 2:
+
+- 2 Ki
+- 256 Pi
+- 512 Ki
+- 64 Gi
+- 16 Mi
+- 128 Ei
+
+**Ans**:
+
+(d) Write the following numbers as powers of 2:
+
+- 2 Ki = $2^{11}$
+- 256 Pi = $2^{58}$
+- 512 Ki = $2^{19}$
+- 64 Gi = $2^{36}$
+- 16 Mi = $2^{24}$
+- 128 Ei = $2^{67}$
