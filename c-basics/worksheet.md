@@ -38,3 +38,52 @@ What does pp evaluate to? How about \*pp? What about \*\*pp?
 - \*pp -> 0xF93209AC.
 - \*\*pp -> 0x2A.
 
+### 2.2. The following functions are syntactically-correct C, but written in an incomprehensible style. Describe the behavior of each function in plain English.
+
+#### (a) Recall that the ternary operator evaluates the condition before the ? and returns the value before the colon (:) if true, or the value after it if false.
+
+```c
+1 int foo(int *arr, size_t n) {
+2 return n ? arr[0] + foo(arr + 1, n - 1) : 0;
+3 }
+```
+
+**Ans**: It basically sums **n** integers in an array **arr**. It works in a way that "while" **n** is not equal to zero, it sums the first integer in the array with the recursive call to the function pointing to the next number and with **n** decreased in 1.
+
+#### (b) Recall that the negation operator, !, returns 0 if the value is non-zero, and 1 if the value is 0. The ˜ operator performs a bitwise not (NOT) operation.
+
+```c
+1 int bar(int *arr, size_t n) {
+2 int sum = 0, i;
+3 for (i = n; i > 0; i--)
+4 sum += !arr[i - 1];
+5 return ˜sum + 1;
+6 }
+```
+
+**Ans**: It counts the occurrences of 0s in the array and returns it as a negative number. The expression `!arr[i - 1]` will return 1 (increasing `sum`) when the digit is zero and will return 0 (not increasing `sum`) when the digit is non-zero. `~sum + 1` is the two's complement representation of `sum`. Hence, if the array contains three zeroes, the function will return -3.
+
+#### (c) Recall that ˆ is the bitwise exclusive-or (XOR) operator.
+
+```c
+1 void baz(int x, int y) {
+2 x = x ˆ y;
+3 y = x ˆ y;
+4 x = x ˆ y;
+5 }
+```
+
+**Ans**: Locally, it swaps **x** and **y**, but in the caller function nothing happens, since just the values are being passed.
+
+#### (d) Bonus: How do you write the bitwise exclusive-nor (XNOR) operator in C?
+
+The XNOR operator between x and y could be written as `!(x^y)`. But looking at the truth table of a XNOR gate.
+
+| x | y | x XNOR y |
+|:-:|:-:|:--------:|
+| 0 | 0 |     1    |
+| 0 | 1 |     0    |
+| 1 | 0 |     0    |
+| 1 | 1 |     1    |
+
+We could just write `x == y` to get the result of a XNOR, since the bits must match.
