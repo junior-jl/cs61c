@@ -183,3 +183,40 @@ int sum(int* summands, size_t arr_size)
 ```
 
 **Ans**: Line 2 has a mistake. It looks like `replaceptr` is supposed to be a pointer to char, but it is not being declared as a pointer, just as a char. So the line 2 should be `char *srcptr, *replaceptr`.
+
+## 4. Memory Management
+
+### 4.1. For each part, choose one or more of the following memory segments where the data could be located: code, static, heap, stack.
+
+(a) Static variables
+(b) Local variables
+(c) Global variables
+(d) Constants
+(e) Machine Instructions
+(f) Result of malloc
+(g) String Literals
+
+**Ans**:
+
+(a) Static variables -> STATIC
+(b) Local variables -> STACK
+(c) Global variables -> STATIC
+(d) Constants -> STATIC ?
+(e) Machine Instructions -> CODE
+(f) Result of malloc -> HEAP
+(g) String Literals -> STATIC ?
+
+### 4.2. Write the code necessary to allocate memory on the heap in the following scenarios.
+
+#### (a) An array **arr** of _k_ integers.
+
+**Ans**: `arr = (int *) malloc(k * sizeof(int));`.
+
+#### (b) A string **str** containing _p_ characters.
+
+**Ans**: `str = (char *) malloc(p + 1);`.
+
+#### (c) An _n x m_ matriz **mat** of integers initialized to zero.
+
+**Ans**: One could do `mat = (int *) malloc(n * m * sizeof(int));` and initialize to zero using a loop. But it is better to use `calloc` (allocate and initialize to zero) `mat = (int *) calloc(n * m, sizeof(int);`. Check https://devdocs.io/c/memory/calloc.
+
