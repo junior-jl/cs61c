@@ -44,7 +44,7 @@ What does pp evaluate to? How about \*pp? What about \*\*pp?
 
 ```c
 1 int foo(int *arr, size_t n) {
-2 return n ? arr[0] + foo(arr + 1, n - 1) : 0;
+2   return n ? arr[0] + foo(arr + 1, n - 1) : 0;
 3 }
 ```
 
@@ -54,10 +54,10 @@ What does pp evaluate to? How about \*pp? What about \*\*pp?
 
 ```c
 1 int bar(int *arr, size_t n) {
-2 int sum = 0, i;
-3 for (i = n; i > 0; i--)
-4 sum += !arr[i - 1];
-5 return ˜sum + 1;
+2   int sum = 0, i;
+3   for (i = n; i > 0; i--)
+4     sum += !arr[i - 1];
+5   return ˜sum + 1;
 6 }
 ```
 
@@ -67,9 +67,9 @@ What does pp evaluate to? How about \*pp? What about \*\*pp?
 
 ```c
 1 void baz(int x, int y) {
-2 x = x ˆ y;
-3 y = x ˆ y;
-4 x = x ˆ y;
+2   x = x ˆ y;
+3   y = x ˆ y;
+4   x = x ˆ y;
 5 }
 ```
 
@@ -87,3 +87,99 @@ The XNOR operator between x and y could be written as `!(x^y)`. But looking at t
 | 1 | 1 |     1    |
 
 We could just write `x == y` to get the result of a XNOR, since the bits must match.
+
+## 3. Programming with Pointers
+
+### 3.1. Implement the following functions so that they work as described.
+
+#### (a) Swap the value of two ints. Remain swapped after returning from this function.
+
+**Ans**:
+
+```c
+void swap(int *x, int *y)
+{
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+```
+
+#### (b) Return the number of bytes in a string. Do not use strlen.
+
+**Ans**:
+
+```c
+int mystrlen(char *mystr)
+{
+	int count = 0;
+	while ((*mystr++) != '\0')
+	{
+		count += (int) sizeof(char);
+	}
+	return count;
+}
+```
+
+### 3.2. The following functions may contain logic or syntax errors. Find and correct them.
+
+#### (a) Returns the sum of all the elements in summands.
+
+```c
+1 int sum(int* summands) {
+2   int sum = 0;
+3   for (int i = 0; i < sizeof(summands); i++)
+4     sum += *(summands + i);
+5   return sum;
+6 }
+```
+
+**Ans**: The function doesn't know the size of the array because it is being treated as a pointer.
+
+```c
+int sum(int* summands, size_t arr_size)
+{
+	int sum = 0;
+	for (int i = 0; i < arr_size; i++)
+		sum += *(summands + i);
+	return sum;
+}
+```
+
+#### (b) Increments all of the letters in the string which is stored at the front of an array of arbitrary length, `n >= strlen(string)`. Does not modify any other parts of the array’s memory.
+
+```c
+1 void increment(char* string, int n) {
+2   for (int i = 0; i < n; i++)
+3     *(string + i)++;
+4 }
+```
+
+**Ans**:
+
+#### (c) Copies the string `src` to `dst`.
+
+```c
+1 void copy(char* src, char* dst) {
+2   while (*dst++ = *src++);
+3 }
+```
+
+**Ans**: It looks like it works fine, but the `dst` string should be initialized before being passed, or at least malloc'ed.
+
+#### (d) Overwrites an input string src with "61C is awesome!" if there’s room. Does nothing if there is not. Assume that `length` correctly represents the length of `src`.
+
+```c
+1 void cs61c(char* src, size_t length) {
+2   char *srcptr, replaceptr;
+3   char replacement[16] = "61C is awesome!";
+4   srcptr = src;
+5   replaceptr = replacement;
+6   if (length >= 16) {
+7     for (int i = 0; i < 16; i++)
+8       *srcptr++ = *replaceptr++;
+9   }
+10 }
+```
+
+**Ans**: Line 2 has a mistake. It looks like `replaceptr` is supposed to be a pointer to char, but it is not being declared as a pointer, just as a char. So the line 2 should be `char *srcptr, *replaceptr`.
