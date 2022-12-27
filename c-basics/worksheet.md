@@ -220,3 +220,31 @@ int sum(int* summands, size_t arr_size)
 
 **Ans**: One could do `mat = (int *) malloc(n * m * sizeof(int));` and initialize to zero using a loop. But it is better to use `calloc` (allocate and initialize to zero) `mat = (int *) calloc(n * m, sizeof(int);`. Check https://devdocs.io/c/memory/calloc.
 
+### 4.3. What’s the main issue with the code snippet seen here? (Hint: gets() is a function that reads in user input and stores it in the array given in the argument.)
+
+```c
+1 char* foo() {
+2 	char buffer[64];
+3 	gets(buffer);
+4 
+5 	char* important_stuff = (char*) malloc(11 * sizeof(char));
+6 
+7 	int i;
+8 	for (i = 0; i < 10; i++) important_stuff[i] = buffer[i];
+9 	important_stuff[i] = '\0';
+10 	return important_stuff;
+11 }
+```
+
+**Ans**: The main issue is probably the limited amount of characters the user can input (64).
+
+### 4.4. Suppose we’ve defined a linked list struct as follows. Assume `*lst` points to the first element of the list, or is NULL if the list is empty.
+
+```c
+struct ll_node {
+	int first;
+	struct ll_node* rest;
+}
+```
+
+Implement prepend, which adds one new value to the front of the linked list. Hint: why use `ll_node ∗∗lst` instead of `ll_node ∗lst`?
