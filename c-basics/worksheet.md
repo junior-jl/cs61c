@@ -157,6 +157,13 @@ int sum(int* summands, size_t arr_size)
 
 **Ans**:
 
+```c
+void increment(char* string, int n) {
+  for (int i = 0; i < strlen(string); i++)
+    *(string + i)++;
+}
+```
+
 #### (c) Copies the string `src` to `dst`.
 
 ```c
