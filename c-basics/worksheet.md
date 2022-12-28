@@ -255,3 +255,33 @@ struct ll_node {
 ```
 
 Implement prepend, which adds one new value to the front of the linked list. Hint: why use `ll_node ∗∗lst` instead of `ll_node ∗lst`?
+
+**Ans**: 
+
+```c
+void prepend(struct ll_node** lst, int value)
+{
+	struct ll_node *new = (struct ll_node *) malloc(sizeof(struct ll_node)); // creates new node
+	new->first = value; // the value of the new node is the value passed to the function
+	new->rest = *lst; // this new node points to the former first node
+	*lst = new; // now the first node of the list is the newly created one.
+}
+```
+
+### 4.5. Implement `free_ll`, which frees all the memory consumed by the linked list.
+
+**Ans**:
+
+```c
+void free_ll(struct ll_node** lst)
+{
+	struct ll_node *temp = *lst;
+	while (*lst)
+	{
+		temp = (*lst)->rest;
+		free(*lst);
+		*lst = temp;
+	}
+	temp = NULL;
+}
+```
