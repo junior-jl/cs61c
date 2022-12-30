@@ -82,6 +82,12 @@ $8.25$ = 0x41040000;
 
 ![image](https://user-images.githubusercontent.com/69206952/210022964-359ee2c9-af6f-4ba8-9418-036d4fc35f00.png)
 
-$39.5625$ = 0x 
+$39.5625$ = 0x421E4000; 
 
+![image](https://user-images.githubusercontent.com/69206952/210023481-967d4d23-b4fc-44c2-9b86-f0a1e42cfa05.png)
 
+0xFF94BEEF = NaN;
+
+![image](https://user-images.githubusercontent.com/69206952/210023703-37d28584-1fd7-4bb5-8bfc-a93bfe6bf4f9.png)
+
+$-\infty$ = Sign: 1; Exponent: 255; Significand: 0; 0xFF800000;
