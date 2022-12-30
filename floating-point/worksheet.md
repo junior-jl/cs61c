@@ -58,3 +58,30 @@ Note that in the above table, our exponent has values from 0 to 255. When transl
 ### 2.4. What is the smallest positive normalized value that can be stored using a single precision float?
 
 **Ans**: Sign: 0; Exponent: 0000 0001; Mantissa: 000 0000 0000 0000 0000 0000. $2^{-126} =  \approx 1.18 \times 10^{-38}$.
+
+### 2.5. Cover the following single-precision floating point numbers from binary to decimal or from decimal to binary. You may leave your answer as an expression.
+
+- 0x00000000;
+- 8.25;
+- 0x00000F00;
+- 39.5625;
+- 0xFF94BEEF;
+- $-\infty$;
+
+**Ans**: 
+
+0x00000000 = $0_{10}$;
+
+$8.25$ = 0x41040000;
+
+![image](https://user-images.githubusercontent.com/69206952/210023057-c6a26bf3-5737-4c4c-971f-db5d30cc79f9.png)
+
+
+0x00000F00 $\approx 5.38 \times 10^{-38}$;
+
+
+![image](https://user-images.githubusercontent.com/69206952/210022964-359ee2c9-af6f-4ba8-9418-036d4fc35f00.png)
+
+$39.5625$ = 0x 
+
+
