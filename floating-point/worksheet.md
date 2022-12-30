@@ -91,3 +91,27 @@ $39.5625$ = 0x421E4000;
 ![image](https://user-images.githubusercontent.com/69206952/210023703-37d28584-1fd7-4bb5-8bfc-a93bfe6bf4f9.png)
 
 $-\infty$ = Sign: 1; Exponent: 255; Significand: 0; 0xFF800000;
+
+## 3. More Floating Point Representation
+
+Not every number can be represented perfectly using floating point. For example, $1/3$ can only be approximated and thus must be rounded in any attempt to represent it. For this question, we will only look at positive numbers.
+
+### 3.1. What is the next smallest number larger than 2 that can be represented completely?
+
+**Ans**: ![image](https://user-images.githubusercontent.com/69206952/210080051-324f0ab5-78a2-4a98-af5e-2ca75ba54c66.png)
+
+$2 \times (1 + 2^{-23}) \approx 2.0000002384185791015625$
+
+### 3.2. What is the next smallest number larger than 4 that can be represented completely?
+
+**Ans**: Following the same thought of the last question, the next number is $2^2 \times (1 + 2^{-23}) \approx 4.000000476837158203125$.
+
+### 3.3. Define stepsize to be the distance between some value x and the smallest value larger than x that can be completely represented. What is the step size for 2? 4?
+
+**Ans**: The stepsize depends on the exponent value. So $step = 2^{exp + bias} \times 2^{-23}$. Hence, for 2, we have
+
+$$ step = 2 \times 2^{-23} = 2^{-22}$$
+
+And for 4,
+
+$$ step = 2^2 \times 2^{-23} = 2^{-21}$$
