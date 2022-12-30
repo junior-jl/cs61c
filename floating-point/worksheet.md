@@ -115,3 +115,19 @@ $$ step = 2 \times 2^{-23} = 2^{-22}$$
 And for 4,
 
 $$ step = 2^2 \times 2^{-23} = 2^{-21}$$
+
+### 3.4. Now let’s see if we can generalize the stepsize for normalized numbers (we can do so for denorms as well, but we won’t in this question). If we are given a normalized number that is not the largest representable normalized number with exponent value x and with significand value y, what is the stepsize at that value? Hint: There are 23 significand bits.
+
+**Ans**: 
+
+![image](https://user-images.githubusercontent.com/69206952/210081938-c5f26a95-3e3e-4153-b420-734bfa4c6ec7.png)
+
+$$ step = 2^{x - 150} $$
+
+### 3.5. Now let’s apply this technique. What is the largest odd number that we can represent? Part 4 should be very useful in finding this answer.
+
+**Ans**: 
+
+![image](https://user-images.githubusercontent.com/69206952/210083286-b3c4232e-31ff-41f6-a32c-4af2db9e7d5e.png)
+
+$$ 2^{-24} - 1$$
