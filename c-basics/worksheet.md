@@ -206,11 +206,17 @@ void increment(char* string, int n) {
 **Ans**:
 
 (a) Static variables -> STATIC
+
 (b) Local variables -> STACK
+
 (c) Global variables -> STATIC
+
 (d) Constants -> STATIC ?
+
 (e) Machine Instructions -> CODE
+
 (f) Result of malloc -> HEAP
+
 (g) String Literals -> STATIC ?
 
 ### 4.2. Write the code necessary to allocate memory on the heap in the following scenarios.
