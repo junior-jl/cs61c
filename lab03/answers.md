@@ -38,3 +38,13 @@ The `.word` directive stores enough space in memory for a word.
 The `.text` directive marks the beginning of the instructions.
 
 2. Run the program to completion. What number did the program output? What does this number represent?
+
+**Ans**: 34. It is the ninth number in the Fibonacci sequence starting at 1.
+
+3. At what address is n stored in memory? Hint: Look at the contents of the registers.
+
+**Ans**: ![image](https://user-images.githubusercontent.com/69206952/211394939-3ae4eb56-23b1-4b90-a137-fbc899d0a156.png)
+
+4. Without actually editing the code (i.e. without going into the "Editor" tab), have the program calculate the 13th fib number (0-indexed) by manually modifying the value of a register. You may find it helpful to first step through the code. If youprefer to look at decimal values, change the "Display Settings" option at the bottom.
+
+**Ans**: By putting a C in the t3 register after the assignment to 9, the program outputs `144`.
