@@ -217,7 +217,7 @@ void increment(char* string, int n) {
 
 (f) Result of malloc -> HEAP
 
-(g) String Literals -> STATIC ?
+(g) String Literals -> CODE
 
 ### 4.2. Write the code necessary to allocate memory on the heap in the following scenarios.
 
