@@ -186,3 +186,6 @@ la s2, dest
     jal x0, loop # (j loop) discard return address
 
 
+```
+
+- How the `pointers` are manipulated in the assembly code: As one can see in the commented snippet above, the pointers are used by loading to a register the what is in the address of itself plus the offset given by `t0` shifted to the left twice (i.e. 4 times k, where k is the index of the element). It is worth mentioning that the true offset (4 times t0) is being stored in `s3`.
