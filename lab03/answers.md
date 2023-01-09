@@ -163,5 +163,26 @@ la s1, source
 la s2, dest
 ```
 
-- The assembly code for the `loop` found in the C code: 
+- The assembly code for the `loop` found in the C code: The comments explain how the `loop` is implemented in the RISC-V code (equivalent to the `for` loop in the C code):
+
+```s
+    slli s3, t0, 2 # t0 is 'k' -> it is being mult. by 4 because a word is 4 bytes.
+    add t1, s1, s3 # t1 = s1 (source) + s3 (4*k) (current element's address)
+    lw t2, 0(t1) # t2 = source[k]
+    beq t2, x0, exit # if (source[k] == 0), exit - Assembly condition inverted the C condition
+    add a0, x0, t2 # a0 = t2 (source[k])
+    addi sp, sp, -8 # Allocate space in the stack to call fun() (PUSH)
+    sw t0, 0(sp) # save t0 (k)
+    sw t2, 4(sp) # save t2 (source[k])
+    jal fun # Call fun() and store return address in ra
+    lw t0, 0(sp) # recover t0
+    lw t2, 4(sp) # recover t2
+    addi sp, sp, 8 # increment stack (POP)
+    add t2, x0, a0 # t2 = a0 (return value of fun(source[k]))
+    add t3, s2, s3 # t3 = s2 (dest) + s3 (4*k) (current element's address of dest)
+    sw t2, 0(t3) # dest[k] = fun(source[k])
+    add s0, s0, t2 # s0 (sum) += dest[k]
+    addi t0, t0, 1 # k++
+    jal x0, loop # (j loop) discard return address
+
 
