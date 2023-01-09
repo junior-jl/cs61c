@@ -154,4 +154,14 @@ int main() {
 
 - The register representing the variable **k**: `t0` is the register used in the Assembly code that performs the same operations as `k` in the C code. It is used in the loop to access elements in the array and is incremented after each iteration.
 
-- The register representing the variable **sum**: 
+- The register representing the variable **sum**: `s0` is the equivalent register to `sum` variable in C. It is the sum of the `dest` elements.
+
+- The registers acting as pointers to `source` and `dest` arrays: As shown by these two lines of code, `s1` and `s2` are the registers acting as pointers to `source` and `dest`, respectively.
+
+```s
+la s1, source
+la s2, dest
+```
+
+- The assembly code for the `loop` found in the C code: 
+
