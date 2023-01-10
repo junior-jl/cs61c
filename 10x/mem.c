@@ -173,13 +173,14 @@ void print_array_t(array_t arr[size])
     }
 }
 
+const size_t s = sizeof(array_t);
 //int compare_array_t(array_t arr1[size], array_t arr2);
 int test_store_byte ( ) {
 
 // 00, 42, 55, 7f, FF, D3, 96, 81
 unsigned long long arr_teste[] = {0x00, 0x42, 0x55, 0x7f, 0xFF, 0xD3, 0x96, 0x81};
 store_byte(sb_data, arr_teste);
-size_t s = sizeof(sb_expected_data)/sizeof(sb_expected_data[0]);
+// size_t s = sizeof(sb_expected_data)/sizeof(sb_expected_data[0]);
 printf("Expected Array:\n\n");
 print_array_t(sb_expected_data);
 printf("Modified Array\n\n");
@@ -196,7 +197,7 @@ int test_store_hword ( ) {
 // 7fff, 77f0, 6fe1, 67d2, 8000, 880f, 901E, 982D
 unsigned long long arr_teste[] = {0x7fff, 0x77f0, 0x6fe1, 0x67d2, 0x8000, 0x880f, 0x901E, 0x982D};
 store_hword(sh_data, arr_teste);
-size_t s = sizeof(sh_expected_data)/sizeof(sh_expected_data[0]);
+// size_t s = sizeof(sh_expected_data)/sizeof(sh_expected_data[0]);
 printf("Expected Array:\n\n");
 print_array_t(sh_expected_data);
 printf("Modified Array\n\n");
@@ -211,7 +212,7 @@ int test_store_word ( ) {
 // 89ABCDEF, 01234567
 unsigned long long arr_teste[] = {0x89ABCDEF, 0x89ABCDEF, 0x89ABCDEF, 0x89ABCDEF, 0x01234567, 0x01234567, 0x01234567, 0x01234567};
 store_word(sw_data, arr_teste);
-size_t s = sizeof(sw_expected_data)/sizeof(sw_expected_data[0]);
+// size_t s = sizeof(sw_expected_data)/sizeof(sw_expected_data[0]);
 printf("Expected Array:\n\n");
 print_array_t(sw_expected_data);
 printf("Modified Array\n\n");
@@ -226,7 +227,7 @@ int test_store_dword ( ) {
 // 08192A3B4C5D6E7F
 unsigned long long arr_teste[] = {0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F, 0x08192A3B4C5D6E7F};
 store_dword(sd_data, arr_teste);
-size_t s = sizeof(sd_expected_data)/sizeof(sd_expected_data[0]);
+// size_t s = sizeof(sd_expected_data)/sizeof(sd_expected_data[0]);
 printf("Expected Array:\n\n");
 print_array_t(sd_expected_data);
 printf("Modified Array\n\n");
