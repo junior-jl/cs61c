@@ -24,3 +24,11 @@
 ### 1.6. Calling `j label` does the exact same thing as calling `jal label`.
 
 **Ans**: False: `jal label` is the same as `jal ra, label`. While `j label` is `jal x0, label`, so it discards the return address.
+
+## 2. Basic Instructions
+
+For your reference, here are some of the basic instructions for arithmetic operations and dealing with memory (Note: ARG1 is argument register 1, ARG2 is argument register 2, and DR is destination register):
+
+![image](https://user-images.githubusercontent.com/69206952/212407198-920bf775-3abd-4ef7-bbdb-8ea39ff47abd.png)
+
+You may also see that there is an "i" at the end of certain instructions, such as `addi`, `slli`, etc. This means that ARG2 becomes an "immediate" or an integer instead of using a register. There are also immediates in some other instructions such as `sw` and `lw`. Note that the size (maximum number of bits) of an immediate in any given instruction depends on what type of instruction it is (more on this soon!)
