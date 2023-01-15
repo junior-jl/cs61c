@@ -83,8 +83,111 @@ Because of sign extension, the whole code makes `t0 = -t0; // t0 = -1`.
 
 | **C** | **RISC-V** |
 |:---:|:---:|
+| `// s0 -> a, s1 -> b`<br>`// s2 -> c, s3 -> z`<br><br>`int a = 4, b = 5, c = 6, z;`<br>`z = a + b + c + 10;` |  |
+| `//s0 -> int * p = intArr`<br>`//s1 -> a`<br>`*p = 0;`<br>`int a = 2;`<br>`p[1] = p[a] = a;` |  |
+| `// s0 -> a, s1 -> b`<br>`int a = 5, b = 10;`<br>`if(a + a == b) {`<br>`    a = 0;`<br>`} else {`<br>`    b = a - 1;`<br>`}` |  |
+|  | `addi s0, x0, 0`<br>`addi s1, x0, 1`<br>`addi t0, x0, 30`<br>`loop:`<br>`beq s0, t0, exit`<br>`add s1, s1, s1`<br>`addi s0, s0, 1`<br>`jal x0, loop`<br>`exit:` |
+| `// s0 -> n, s1 -> sum`<br>`// assume n > 0 to start`<br>`for (int sum = 0; n > 0; n--) {`<br>`    sum += n;`<br>`}` |  |
+
+**Ans**:
+
+| **C** | **RISC-V** |
+|:---:|:---:|
 | `// s0 -> a, s1 -> b`<br>`// s2 -> c, s3 -> z`<br><br>`int a = 4, b = 5, c = 6, z;`<br>`z = a + b + c + 10;` | `addi s0, x0, 4`<br>`addi s1, x0, 5`<br>`addi s2, x0, 6`<br>`add s3, s0, s1`<br>`add s3, s3, s2`<br>`addi s3, s3, 10<br>` |
 | `//s0 -> int * p = intArr`<br>`//s1 -> a`<br>`*p = 0;`<br>`int a = 2;`<br>`p[1] = p[a] = a;` | `sw x0, 0(s0)`<br>`addi s1, x0, 2`<br>`slli t0, s1, 2`<br>`add t0, t0, s0`<br>`sw s1, 0(t0)`<br>`sw s1, 4(s0)` |
 | `// s0 -> a, s1 -> b`<br>`int a = 5, b = 10;`<br>`if(a + a == b) {`<br>`    a = 0;`<br>`} else {`<br>`    b = a - 1;`<br>`}` | `addi s0, x0, 5`<br>`addi s1, x0, 10`<br>`add t0, s0, s0`<br>`bne t0, s1, other`<br>`add s0, x0, x0`<br>`jal x0, finish`<br>`other:`<br>`	addi s1, s0, -1`<br>`finish:` |
 | `int s0 = 0, s1 = 1, t0 = 30;`<br>`while (s0 != t0)`<br>`{`<br>  `	s1 += s1;`<br>`	s0++;`<br>`}` | `addi s0, x0, 0`<br>`addi s1, x0, 1`<br>`addi t0, x0, 30`<br>`loop:`<br>`beq s0, t0, exit`<br>`add s1, s1, s1`<br>`addi s0, s0, 1`<br>`jal x0, loop`<br>`exit:` |
 | `// s0 -> n, s1 -> sum`<br>`// assume n > 0 to start`<br>`for (int sum = 0; n > 0; n--) {`<br>`    sum += n;`<br>`}` | `    addi s1, x0, 0`<br>`loop:`<br>`    ble s0, x0, exit`<br>`    add s1, s1, s0`<br>`    addi s0, s0, -1`<br>`    jal x0, loop`<br>`exit:` |
+
+## 4. RISC-V with Arrays and Lists
+
+Comment what each code block does. Each block runs in isolation. Assume that there is an array, `int arr[6] = {3, 1, 4, 1, 5, 9}`, which starts at memory address `0xBFFFFF00`, and a linked list struct (as defined below), `struct ll* lst`, whose first element is located at address `0xABCD0000`. Let `s0` contain `arr`'s address `0xBFFFFF00`, and let `s1` contain `lst`'s address `0xABCD0000`. You may assume integers and pointers are 4 bytes and that structs are tightly packed. Assume that `lst`'s last node's `next` is a NULL pointer to memory address `0x00000000`.
+
+```c
+struct ll {
+  int val;
+  struct ll* next;
+}
+```
+
+### 4.1. 
+
+```s
+lw t0, 0(s0)
+lw t1, 8(s0)
+add t2, t0, t1
+sw t2, 4(s0)
+```
+
+**Ans**: 
+
+```s
+lw t0, 0(s0) # t0 = arr[0]
+lw t1, 8(s0) # t1 = arr[2]
+add t2, t0, t1 # t2 = arr[0] + arr[2]
+sw t2, 4(s0) # arr[1] = arr[0] + arr[2]
+```
+
+The block do what the following C code would do: `arr[1] = arr[0] + arr[2];`
+
+### 4.2.
+
+```s
+loop: beq s1, x0, end
+      lw t0, 0(s1)
+      addi t0, t0, 1
+      sw t0, 0(s1)
+      lw s1, 4(s1)
+      jal x0, loop
+end:
+```
+
+**Ans**:
+
+```s
+# jump to end if lst == 0
+# since it's a loop... while (lst)
+loop: beq s1, x0, end # while (lst)
+      lw t0, 0(s1) # t0 = *lst // (value)
+      addi t0, t0, 1 # t0++; // increments value of node by 1
+      sw t0, 0(s1) # "put it back"
+      lw s1, 4(s1) # s1 now holds the address of the next node
+      jal x0, loop # jump back to loop to check condition again
+end:
+```
+
+The block increments all the values in the linked list by 1.
+
+### 4.3. 
+
+```s
+      add t0, x0, x0
+loop: slti t1, t0, 6
+      beq t1, x0, end
+      slli t2, t0, 2
+      add t3, s0, t2
+      lw t4, 0(t3)
+      sub t4, x0, t4
+      sw t4, 0(t3)
+      addi t0, t0, 1
+      jal x0, loop
+end:
+```
+
+**Ans**:
+
+```s
+      add t0, x0, x0 # t0 = 0
+loop: slti t1, t0, 6 # t1 = (t0 < 6) ? 1 : 0;
+      beq t1, x0, end # if t1 == 0 (t0 >= 6), end
+      slli t2, t0, 2 # t2 = t0 << 2 (4 * t0)
+      add t3, s0, t2 # t3 = s0 + t2 (t3 -> address of current value of arr)
+      lw t4, 0(t3) # t4 = *t3 (t4 -> current value of arr)
+      sub t4, x0, t4 # t4 = (-t4); // arr[i] = -arr[i]
+      sw t4, 0(t3) # "put it back"
+      addi t0, t0, 1 # t0++; // i++
+      jal x0, loop # jump to loop to re-check condition
+end:
+```
+
+The block multiplies all the elements of the array by -1. 
