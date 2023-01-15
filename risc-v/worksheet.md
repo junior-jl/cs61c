@@ -76,3 +76,15 @@ addi t0, t0, 1
 3. `t0++; // t0 = 0xFFF`
 
 Because of sign extension, the whole code makes `t0 = -t0; // t0 = -1`.
+
+## 3. C to RISC-V
+
+### 3.1. Translate between the C and RISC-V verbatim.
+
+| **C** | **RISC-V** |
+|:---:|:---:|
+| `// s0 -> a, s1 -> b`<br>`// s2 -> c, s3 -> z`<br><br>`int a = 4, b = 5, c = 6, z;`<br>`z = a + b + c + 10;` | `addi s0, x0, 4`<br>`addi s1, x0, 5`<br>`addi s2, x0, 6`<br>`add s3, s0, s1`<br>`add s3, s3, s2`<br>`addi s3, s3, 10<br>` |
+| `//s0 -> int * p = intArr`<br>`//s1 -> a`<br>`*p = 0;`<br>`int a = 2;`<br>`p[1] = p[a] = a;` | `sw x0, 0(s0)`<br>`addi s1, x0, 2`<br>`slli t0, s1, 2`<br>`add t0, t0, s0`<br>`sw s1, 0(t0)`<br>`sw s1, 4(s0)` |
+| `// s0 -> a, s1 -> b`<br>`int a = 5, b = 10;`<br>`if(a + a == b) {`<br>`    a = 0;`<br>`} else {`<br>`    b = a - 1;`<br>`}` | `addi s0, x0, 5`<br>`addi s1, x0, 10`<br>`add t0, s0, s0`<br>`bne t0, s1, other`<br>`add s0, x0, x0`<br>`jal x0, finish`<br>`other:`<br>`	addi s1, s0, -1`<br>`finish:` |
+| `int s0 = 0, s1 = 1, t0 = 30;`<br>`while (s0 != t0)`<br>`{`<br>  `	s1 += s1;`<br>`	s0++;`<br>`}` | `addi s0, x0, 0`<br>`addi s1, x0, 1`<br>`addi t0, x0, 30`<br>`loop:`<br>`beq s0, t0, exit`<br>`add s1, s1, s1`<br>`addi s0, s0, 1`<br>`jal x0, loop`<br>`exit:` |
+| `// s0 -> n, s1 -> sum`<br>`// assume n > 0 to start`<br>`for (int sum = 0; n > 0; n--) {`<br>`    sum += n;`<br>`}` | `    addi s1, x0, 0`<br>`loop:`<br>`    ble s0, x0, exit`<br>`    add s1, s1, s0`<br>`    addi s0, s0, -1`<br>`    jal x0, loop`<br>`exit:` |
