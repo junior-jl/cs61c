@@ -218,3 +218,80 @@ The block multiplies all the elements of the array by -1.
 
 **Ans**: All the ones mentioned in the last question, because they are always restored by the callee function. 
 
+## 6. Writing RISC-V Functions
+
+### 6.1. Write a function sumSquare in RISC-V that, when given an integer n, returns the summation below. If n is not positive, then the function returns 0.
+
+$$ n^2 + (n - 1)^2 + \cdots + 1^2 $$
+
+For this problem, you are given a RISC-V function called `square` that takes in a single integer and returns its square.
+
+First, let’s implement the meat of the function: the squaring and summing. We will be abiding by the caller/callee convention, so in what register can we expect the parameter n? What registers should hold square’s parameter and return value? In what register should we place the return value of `sumSquare`?
+
+**Ans:**
+
+```s
+    addi s0, a0, 0 # t0 = n
+    addi s1, x0, 0 # sum (t1) = 0
+loop:
+    # if n <= 0, sum will never be incremented, so it will return 0
+    ble s0, x0, exit # if s0 <= 0, exit
+    addi a0, s0, 0 # a0 -> arg to call square
+    jal ra, square # call square and keep return address
+    add s1, s1, a0 # sum += square(n)
+    addi s0, s0, -1 # n-- (s0--)
+    jal x0, loop # re-check condition  
+exit:
+    addi a0, s1, 0 # a0 (return sum)
+```
+
+### 6.2. Since `sumSquare` is the callee, we need to ensure that it is not overriding any registers that the caller may use. Given your implementation above, write a prologue and epilogue to account for the registers you used.
+
+**Ans**: The following code is the whole program with $n=3$, a call to print the result on screen and a simple `square` function.
+
+```s
+    addi a0, x0, 3 # n = 3
+    
+    jal ra, sumSquare
+    
+    ###################################
+    # Calls to print result on terminal
+    addi a1, a0, 0
+    addi a0, x0, 1
+    ecall # Print Result
+    
+    addi a0, x0, 10
+    ecall # Exit
+    ###################################
+    
+sumSquare:
+    # Prologue
+    addi sp, sp, -12
+    sw ra, 0(sp)
+    sw s0, 4(sp)
+    sw s1, 8(sp)
+    # End of prologue
+    addi s0, a0, 0 # t0 = n
+    addi s1, x0, 0 # sum (t1) = 0
+loop:
+    ble s0, x0, exit # if s0 == 0, exit
+    addi a0, s0, 0 # a0 -> arg to call square
+    jal ra, square # call square and keep return address
+    add s1, s1, a0 # sum += square(n)
+    addi s0, s0, -1 # n-- (s0--)
+    jal x0, loop # re-check condition  
+exit:
+    addi a0, s1, 0 # a0 (return sum)
+    # Epilogue
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    addi sp, sp, 12
+    # End of epilogue
+    jr ra
+
+square: 
+    mul a0, a0, a0 # a0 *= a0
+    jr ra
+    
+```
