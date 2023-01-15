@@ -41,7 +41,7 @@ You may also see that there is an "i" at the end of certain instructions, such a
 
 #### b) `sw t0, 16(s0)`
 
-**Ans**: It stores in the index 4 of `arr` what it was in `t0`, so it makes `arr[4] = arr[3];`
+**Ans**: It stores in the index 4 of `arr` what it is in `t0`, so it makes `arr[4] = arr[3];`
 
 #### c)
 
@@ -61,6 +61,8 @@ sw t3, 0(t2)
 4. `t3++; // t3 = 6`
 5. `arr[4] = t3 // arr[4] = 6;`
 
+So the whole snippet increments `arr[4]` by 1.
+
 #### d)
 
 ```
@@ -72,3 +74,5 @@ addi t0, t0, 1
 1. `t0 = *s0;` i.e., `t0 = arr[0]; // t0 = 1`
 2. XOR gate between `t0 (1)` and `0xFFF (0000 1111 1111 1111)`. `t0 ^= 0xFFF; // t0 = 0xFFE`
 3. `t0++; // t0 = 0xFFF`
+
+Because of sign extension, the whole code makes `t0 = -t0; // t0 = -1`.
