@@ -31,4 +31,44 @@ For your reference, here are some of the basic instructions for arithmetic opera
 
 ![image](https://user-images.githubusercontent.com/69206952/212407198-920bf775-3abd-4ef7-bbdb-8ea39ff47abd.png)
 
-You may also see that there is an "i" at the end of certain instructions, such as `addi`, `slli`, etc. This means that ARG2 becomes an "immediate" or an integer instead of using a register. There are also immediates in some other instructions such as `sw` and `lw`. Note that the size (maximum number of bits) of an immediate in any given instruction depends on what type of instruction it is (more on this soon!)
+You may also see that there is an "i" at the end of certain instructions, such as `addi`, `slli`, etc. This means that ARG2 becomes an "immediate" or an integer instead of using a register. There are also immediates in some other instructions such as `sw` and `lw`. Note that the size (maximum number of bits) of an immediate in any given instruction depends on what type of instruction it is (more on this soon!).
+
+### 2.1. Assume we have an array in memory that contains `int *arr = {1, 2, 3, 4, 5, 6, 0}`. Let register `s0` hold the address of the element at index 0 in `arr`. You may assume integers are four bytes and our values are word-aligned. What do the snippets of RISC-V code do? Assume that all the instructions are run one after the other in the same context.
+
+#### a) `lw t0, 12(s0)`
+
+**Ans**: It loads the element of index 3 of `arr` in the register `t0`. `t0 = arr[3];`.
+
+#### b) `sw t0, 16(s0)`
+
+**Ans**: It stores in the index 4 of `arr` what it was in `t0`, so it makes `arr[4] = arr[3];`
+
+#### c)
+
+```
+slli t1, t0, 2
+add t2, s0, t1
+lw t3, 0(t2)
+addi t3, t3, 1
+sw t3, 0(t2)
+```
+
+**Ans**: 
+
+1. Shifts `t0` to the left twice and the result goes to `t1`. `t1 = arr[3] << 2 // arr[3] = 4 (100) -> t1 = 10000 (16)`.
+2. Add `s0` (the address of the first element (index 0)) with `t1` (16) and put the result in `t2`. `t2 = s0 + 16;`. So `t2` holds the position of the element of index 4 of `arr`. `t2 = &arr[4];`.
+3. Load into `t3` the value of `*t2`, i.e., `arr[4]`. `t3 = arr[4]; // t3 = 5`
+4. `t3++; // t3 = 6`
+5. `arr[4] = t3 // arr[4] = 6;`
+
+#### d)
+
+```
+lw t0, 0(s0)
+xori t0, t0, 0xFFF
+addi t0, t0, 1
+```
+
+1. `t0 = *s0;` i.e., `t0 = arr[0]; // t0 = 1`
+2. XOR gate between `t0 (1)` and `0xFFF (0000 1111 1111 1111)`. `t0 ^= 0xFFF; // t0 = 0xFFE`
+3. `t0++; // t0 = 0xFFF`
