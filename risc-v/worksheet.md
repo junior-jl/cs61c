@@ -191,3 +191,30 @@ end:
 ```
 
 The block multiplies all the elements of the array by -1. 
+
+## 5. RISC-V Calling Conventions
+
+### 5.1. How do we pass arguments into functions?
+
+**Ans**: By convention, there are eight registers meant for that `a0 - a7` (`x10 - x17`).
+
+### 5.2. How are values returned by functions?
+
+**Ans**: `a0` and `a1` are used to store return values.
+
+### 5.3. What is `sp` and how should it be used in the context of RISC-V functions?
+
+**Ans**: `sp` is the stack pointer. Since the stack grows from higher addresses to lower ones, when we need to create more space on the stack (to call a function), `sp` is subtracted by the amount of space needed (generally a multiple of 4). When the space is not needed anymore, `sp` is added to that amount again to go back to where it was before the function call.
+
+### 5.4. Which values need to saved by the caller, before jumping to a function using `jal`?
+
+**Ans**: The argument registers, the temporary registers and the return address. So, `a0 - a7` (`x10 - x17`), `t0 - t6` (`x5 - x7 ; x28 - x31)`, `ra` (`x1`).
+
+### 5.5. Which values need to be restored by the callee, before returning from a function?
+
+**Ans**: The stack pointer `sp`, `fp` (frame pointer / s0), all the other saved registers (`s1 - s11`).
+
+### 5.6. In a bug-free program, which registers are guaranteed to be the same after a function call? Which registers aren't guaranteed to be the same?
+
+**Ans**: All the ones mentioned in the last question, because they are always restored by the callee function. 
+
