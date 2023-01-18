@@ -215,3 +215,34 @@ explained in more detail in the Venus reference.
 
 So... it doesn't report the error because the function is not ddeclared with the `.globl` directive.
 
+## Exercise 3
+
+#### Bug 1 - `add t1, s0, x0` -> s0 actually holds the address of the node, so this instruction puts the address of the node in `t1`. In order to put the address of the array, `lw t1, 0(s0)`.
+
+#### Bug 2 - `t1, t1, t0` -> offset the array address by the count (`t0`) is supposed to be `t1 = t1 + 4 * t0`. Using `t3` as `4 * t0`, the line was changed to `slli t3, t0, 2` and `add t1, t1, t3`.
+
+#### Bug 3 - `sw a0, 0(t1)` -> it does the right thing, but the temporary variables might change between function calls, so they need to be saved. To do this, the following lines were changed...
+
+On the epilogue of `map`, `addi sp, sp, -12`: `addi sp, sp, -24`.
+On the prologue of `map`, `addi sp, sp, 12`: `addi sp, sp 24`.
+Before `jalr s1`, these lines were added:
+
+```s
+sw t2, 12(sp)
+sw t1, 16(sp)
+sw t2, 20(sp)       # SOLVE BUG 3
+```
+
+After `jalr s1`, these lines were added:
+
+```s
+lw t2, 12(sp)
+lw t1, 16(sp)
+lw t2, 20(sp)       # SOLVE BUG 3
+```
+
+#### Bug 4 - `la a0, 8(s0)` -> the right instruction to 'load the address of the next nodde into a0' is `lw a0, 8(s0)`.
+
+#### Bug 5 - `lw a1, 0(s1)` -> this instruction does not put the address of the function in a1, it puts the first word of the function in it. `mv a1, s1` solves it.
+
+#### Bug 6 - After the epilogue of `done`, the program does not follow the right flow, it needs to go back using `jr ra`. 
