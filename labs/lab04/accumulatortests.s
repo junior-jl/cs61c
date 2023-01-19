@@ -22,7 +22,6 @@ main:
     #jal accumulatorthree
     #jal accumulatorfour
     #jal accumulatorfive
-    li t0, 3
     bne s0, t0, Fail
     li t0 28
     beq a0 t0 Pass
