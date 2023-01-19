@@ -121,3 +121,16 @@ We have several addressing modes to access memory (immediate not listed):
 ### 4.1. What is the range of 32-bit instructions that can be reached from the current PC using a branch instruction?
 
 **Ans**: Only 12 bits are avaliable for the immediate on branch instructions, and we need to be able to go forward and back, so the range is from $PC - 2^{11}$ to $PC + 2^{11} - 1$, but only addresses that are multiples of 2 are valid (for RV32), so we need to divide it by 2. The final range is from $PC - 2^{10}$ to $PC + 2^{10} - 1$.
+
+### 4.2. What is the maximum range of 32-bit instruction that can be reached from the current PC using a jump instruction.
+
+**Ans**: `jal` is a instruction with J-format, so it has 20 bits for the immediate. Following the same thought of the previous question, the final range is from $PC - 2^{18}$ to $PC + 2^{18} - 1$.
+
+### 4.3. Given the following RISC-V code (and instruction addresses), fill in the blank fields for the following instructions (you'll need your RISC-V green card!)
+
+![image](https://user-images.githubusercontent.com/69206952/213475786-6b0c414b-3101-4fe8-846e-32e03d40ef0a.png)
+
+**Ans**:
+
+![image](https://user-images.githubusercontent.com/69206952/213481136-f73e9c33-9491-4576-877c-22ff002b132e.png)
+
