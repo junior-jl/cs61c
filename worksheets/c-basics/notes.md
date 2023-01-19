@@ -1,0 +1,1 @@
+To compile `./sines.c`, you need to run `gcc sines.c -o sines -lm`. The linker cannot find the definition of sin() function. Check https://stackoverflow.com/questions/4188409/why-wont-this-small-functiondrawing-a-circle-in-opengl-compile-in-c
