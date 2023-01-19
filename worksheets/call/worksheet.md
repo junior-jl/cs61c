@@ -120,4 +120,4 @@ We have several addressing modes to access memory (immediate not listed):
 
 ### 4.1. What is the range of 32-bit instructions that can be reached from the current PC using a branch instruction?
 
-**Ans**: Only 12 bits are avaliable for the immediate on branch instructions, and we need to be able to go forward and back, so the range is from $PC - 2^{11}$ to $PC + 2^{11} - 1$, but only addresses that are multiples of 2 are valid, so we need to divide it by 2. The final range is from $PC - 2^{10}$ to $PC + 2^{10} - 1$.
+**Ans**: Only 12 bits are avaliable for the immediate on branch instructions, and we need to be able to go forward and back, so the range is from $PC - 2^{11}$ to $PC + 2^{11} - 1$, but only addresses that are multiples of 2 are valid (for RV32), so we need to divide it by 2. The final range is from $PC - 2^{10}$ to $PC + 2^{10} - 1$.
