@@ -49,3 +49,75 @@ The following is a diagram of the CALL stack detailing how C programs are built 
 ### 2.4. Which step in CALL resolves relative addressing? Absolute addressing?
 
 **Ans**: The assembler converts the instructions to machine code, including the relative addresses. The linker will be responsible for combining multiple files into an executable, calculating the absolute addresses. It also updates the machine code to use absolute addresses.
+
+## 3. Assembling RISC-V
+
+Let's say that we have a C program that has a single function `sum` that computes the sum of an array. We've compiled it to RISC-V, but we haven't assembled the RISC-V code yet.
+
+```s
+1 .import print.s # print.s is a different file
+2 .data
+3 array: .word 1 2 3 4 5
+4 .text
+5 sum: la t0, array
+6 li t1, 4
+7 mv t2, x0
+8 loop: blt t1, x0, end
+9 slli t3, t1, 2
+10 add t3, t0, t3
+11 lw t3, 0(t3)
+12 add t2, t2, t3
+13 addi t1, t1, -1
+14 j loop
+15 end: mv a0, t2
+16 jal ra, print_int # Defined in print.s
+```
+
+### 3.1. Which lines contain pseudoinstruction that need to be converted to regular RISC-V instructions?
+
+**Ans**: 5, 6, 7, 14 and 15.
+
+### 3.2. For the branch/jump instructions, which labels will be resolved in the first pass of the assembler? The second?
+
+**Ans**: On the first pass, the line 14 can be resolved, since it is a reference to a label that has been seen. `blt t1, x0, end` is a forward reference, so it's only resolved in the second pass.
+
+### Let’s assume that the code for this program starts at address `0x00061C00`. The code below is labelled with its address in memory (think: why is there a jump of 8 between the first and second lines?).
+
+```
+1 0x00061C00: sum: la t0, array
+2 0x00061C08: li t1, 4
+3 0x00061C0C: mv t2, x0
+4 0x00061C10: loop: blt t1, x0, end
+5 0x00061C14: slli t3, t1, 2
+6 0x00061C18: add t3, t0, t3
+7 0x00061C1C: lw t3, 0(t3)
+8 0x00061C20: add t2, t2, t3
+9 0x00061C24: addi t1, t1, -1
+10 0x00061C28: j loop
+11 0x00061C2C: end: mv a0, t2
+12 0x00061C30: jal ra, print_int
+```
+
+### 3.3. What is in the symbol table after the assembler makes its passes?
+
+**Ans**: So, answering first why is there a jump of 8 between the first and second lines... the `la` pseudoinstruction is actually "made of" two instructions. The symbol table would contain:
+
+- `sum` -> `0x00061C00`
+- `loop` -> `0x00061C10`
+- `end` -> `0x00061C2C`
+
+### 3.4. What's contained in the relocation table?
+
+**Ans**: `array` lives in the static memory. And `print_int` which will be included in the program by the linker.
+
+## 4. RISC-V Addressing
+
+We have several addressing modes to access memory (immediate not listed):
+
+1. Base displacement addressing adds an immediate to a register value to create a memory address (used for `lw`, `lb`, `sw`, `sb`).
+2. PC-relative addressing uses the PC and adds the immediate value of the instruction (multiplied by 2) to create an address (used by branch and jump instructions).
+3. Register Addressing uses the value in a register as a memory address. For instance, `jalr`, `jr`, and `ret`, where `jr` and `ret` are just pseudoinstructions that get converted to `jalr`.
+
+### 4.1. What is the range of 32-bit instructions that can be reached from the current PC using a branch instruction?
+
+**Ans**: Only 12 bits are avaliable for the immediate on branch instructions, and we need to be able to go forward and back, so the range is from $PC - 2^{11}$ to $PC + 2^{11} - 1$, but only addresses that are multiples of 2 are valid, so we need to divide it by 2. The final range is from $PC - 2^{10}$ to $PC + 2^{10} - 1$.
