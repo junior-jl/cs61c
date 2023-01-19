@@ -246,3 +246,13 @@ lw t2, 20(sp)       # SOLVE BUG 3
 #### Bug 5 - `lw a1, 0(s1)` -> this instruction does not put the address of the function in a1, it puts the first word of the function in it. `mv a1, s1` solves it.
 
 #### Bug 6 - After the epilogue of `done`, the program does not follow the right flow, it needs to go back using `jr ra`. 
+
+## Exercise 4
+
+**Ans**:
+
+- Acc 1 - Prologue is not the first thing of the function... s0 being used before being saved. Also, on the epilogue `t1` is restored to `0(sp)` instead of `s0`.
+- Acc 2 - On the prologue, the stack pointer is being incremented and on the epilogue, being decremented, the opposite of what should happen.
+- Acc 3 - It is probably right, but the `j Epiloguethree` on `TailCasethree` is not necessary.
+- Acc 4 - `t2` is not initialized, but used. The function needs for it to be 0 so the result is right. 
+- Acc 5 - The loop condition is never applied to the first element, so it would fail if the array starts with 0.
