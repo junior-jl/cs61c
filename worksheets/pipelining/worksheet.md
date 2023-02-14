@@ -131,13 +131,13 @@ Control hazards are caused by **jump and branch instructions**, because for all 
 
 ### 4.5. Besides stalling, what can we do to resolve control hazards?
 
-There is the method of branch prediction, in which we try to predict if the branch is going to be taken or not, and if our guess is wrong, just 'throw away' what was going to be done and update PC properly.
+**Ans**: There is the method of branch prediction, in which we try to predict if the branch is going to be taken or not, and if our guess is wrong, just 'throw away' what was going to be done and update PC properly.
 
 ### Extra for Experience
 
 ### 4.6. Given the RISC-V code below and a pipelined CPU with no forwarding, how many hazards would there be? What types are each hazard? Consider all possible hazards from all pairs of instructions.
 
-**Ans**: How many stalls would there need to be in order to fix the data hazard(s)? What about the control hazard(s)?
+How many stalls would there need to be in order to fix the data hazard(s)? What about the control hazard(s)?
 
 ![image](https://user-images.githubusercontent.com/69206952/218605522-6ab46cc7-ea5f-4a12-9290-8c3f5b9761c1.png)
 
