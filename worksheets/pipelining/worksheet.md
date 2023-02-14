@@ -62,3 +62,53 @@ In order to pipeline, we add registers between the five datapath stages. Label e
 So the maximum clock frequency would be $\frac{1}{950ps} = 1.053 GHz$ or $\frac{1}{970ps} = 1.031 GHz$.
 
 ### 3.2. What is the fastest possible clock time for a pipelined datapath?
+
+Not sure how to interpret the delays. # TODO!!
+
+### 3.3. What is the speedup from the single cycle datapath to the pipelined datapath? Why is the speedup less than 5?
+
+TODO when complete question 3.2. But the speedup is less than 5 probably because of the need of pipeline registers and to adapt the stage time to the slowest one.
+
+## 4. Hazards
+
+One of the costs of pipelining is that it introduces three types of pipeline hazards: structural hazards, data hazards, and control hazards.
+
+### Structural Hazards
+
+Structural hazards occur when more than one instruction needs to use the same datapath resource at the same time. There are two main causes of structural hazards:
+
+1. Register File - the register file is accessed both during ID, when it is read, and during WB, when it is written to. We can solve this by having separate read and write ports. To account for reads and writes to the same register, processors usually write to the register during the first half of the clock cycle, and read from it during the second half. This is also known as double pumping.
+2. Memory - Memory is accessed for both instructions and data. Having a separate instruction memory (abbreviated IMEM) and data memory (abbreviated DMEM) solves this hazard.
+
+Something to remember about structural hazards is that they can always be resolved by adding more hardware.
+
+### Data Hazards
+
+Data hazards are caused by data dependencies between instructions. In CS 61C, where we will always assume that instructions are always going through the processor in order, we see data hazards when an instruction **reads** a register before a previous instruction has finished **writing** to that register.
+
+#### Forwarding
+
+Most data hazards can be resolved by forwarding, which is when the result of the EX or MEM stage is sent to the EX stage for a following instruction to use.
+
+### 4.1. Look for data hazards in the code below, and figure out how forwarding could be used to solve them.
+
+![image](https://user-images.githubusercontent.com/69206952/218600214-9326ef03-ce65-4f5d-bd6c-830d9179f372.png)
+
+**Ans**: Two data hazards. Cycles C4 and C5 need the value of `t0`, but it is only updated after C5, so this can be solved by forwarding the output of C3 EX to C4 EX and C5 EX.
+
+### 4.2. Imagine you are a hardware designer working on a CPU's forwarding control logic. How many instructions after the addi instruction could be affected by data hazards created by this addi instruction.
+
+**Ans**: At most, three instructions. If the next three instructions use the value of `t0`, their instruction decode phase would be performed before the writeback phase for the addi instruction.
+
+### Stalls
+
+### 4.3. Look for data hazards in the code below. One of them cannot be solved with forwarding - why? What can we do to solve this hazard?
+
+![image](https://user-images.githubusercontent.com/69206952/218601320-4331bb51-212d-4681-98b0-6d370fd3949e.png)
+
+**Ans**: The data hazard between the instruction 2 and 3 is similar to the ones above, it can be solved with forwarding. But there's also a data hazard between 3 and 4. The data address value can only be used at the and of the MEM stage in C6, but that value is need at the begining at the EX phase for instruction 4 (C6), so it's needed before, this can only be solved stalling, adding a `nop` instruction.
+
+### 4.4. Say you are the compiler and can re-order instructions to minimize data hazards while guaranteeing the same output. How can you fix the code above?
+
+**Ans**: The order 2-1-3-4 would solve the first data hazard, but there would still be the second one. 2-3-1-4 would solve the second one and maintain the first. The best order would be 2-3-1-4.
+
