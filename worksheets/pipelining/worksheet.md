@@ -112,3 +112,40 @@ Most data hazards can be resolved by forwarding, which is when the result of the
 
 **Ans**: The order 2-1-3-4 would solve the first data hazard, but there would still be the second one. 2-3-1-4 would solve the second one and maintain the first. The best order would be 2-3-1-4.
 
+### Detecting Data Hazards
+
+Say we have the rs1, rs2, RegWEn, and rd signals for two instructions (instruction n and instruction n + 1) and we wish to determine if a data hazard exists across the instructions. We can simply check to see if the rd for instruction n matches either rs1 or rs2 of instruction n + 1, indicating that such a hazard exists (think, why does this make sense?).
+
+We could then use our hazard detection to determine which forwarding paths/number of stalls (if any) are necessary to take to ensure proper instruction execution. In pseudo-code, this could look something like the following:
+
+```
+if (rs1(n + 1) == rd(n) || rs2(n + 1) == rd(n) && RegWen(n) == 1) {
+  forward ALU output of instruction n
+}
+
+```
+
+### Control Hazards
+
+Control hazards are caused by **jump and branch instructions**, because for all jumps and some branches, the next PC is not PC + 4, but the result of the computation completed in the EX stage. We could stall the pipeline for control hazards, but this decreases performance.
+
+### 4.5. Besides stalling, what can we do to resolve control hazards?
+
+There is the method of branch prediction, in which we try to predict if the branch is going to be taken or not, and if our guess is wrong, just 'throw away' what was going to be done and update PC properly.
+
+### Extra for Experience
+
+### 4.6. Given the RISC-V code below and a pipelined CPU with no forwarding, how many hazards would there be? What types are each hazard? Consider all possible hazards from all pairs of instructions.
+
+**Ans**: How many stalls would there need to be in order to fix the data hazard(s)? What about the control hazard(s)?
+
+![image](https://user-images.githubusercontent.com/69206952/218605522-6ab46cc7-ea5f-4a12-9290-8c3f5b9761c1.png)
+
+**Ans**: 
+
+1. Between 1 and 2 (data hazard) because of `t1`. Solved with 2 stalls.
+2. Between 2 and 3 (data hazard) because of `s0`. Solved with 2 stalls.
+3. Between 2 and 4 (data hazard) because of `s0`. Would already be solved with the stalls from the previous error.
+4. Between 4 and 5 (control hazard). Two stalls needed or branch prediction.
+
+![image](https://user-images.githubusercontent.com/69206952/218606170-66e723dc-75d6-4135-b57f-11bfae7e1732.png)
