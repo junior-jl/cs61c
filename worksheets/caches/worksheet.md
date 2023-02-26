@@ -98,3 +98,81 @@ $$N * num \ sets = num \ blocks$$
 Note: The test you can use to see if a miss is a conflict miss is the same as the test you can use to see if a miss is a capacity miss.
 
 Note: There are many different ways of fixing misses. The name of the miss doesn't necessarily tell us the best way to reduce the number of misses.
+
+### 5. Code Analysis
+
+Given the follow chunk of code, analyze the hit rate given that we have a byte-addressed computer with a total memory of 1 MiB. It also features a 16 KiB Direct-Mapped cache with 1 KiB blocks. Assume that your cache begins cold.
+
+```c
+# define NUM_INTS 8192  // 2^13
+int A[NUM_INTS];        // A lives at 0x10000
+int i, total = 0;
+for (i = 0; i < NUM_INTS; i += 128) {
+    A[i] = i;           // Line 1
+}
+for (i = 0; i < NUM_INTS; i += 128) {
+    total += A[i];      // Line 2
+}
+
+```
+
+### 5.1. How many bits make up a memory address on this computer?
+
+**Ans**: $log_2(1MiB) = log_2(2^20) = 20$.
+
+### 5.2. What is the T:I:O breakdown?
+
+**Ans**: We have 16KiB/1KiB (16) blocks, so the index needs 4 bits. To address 1KiB (2^10), we need 10 bits on the offset. So, the 6 MSB are for the tag.
+
+### 5.3. Calculate the cache hit rate for the line marked Line 1:
+
+**Ans**: Supposing a 4-bit integer, we would have the address being added to 512 bytes each iteration, since the block is 1024 bytes wide, it would have 2 accesses per block. The first one is always a compulsory miss and the second would be a hit, so 50\%.
+
+### 5.4. Calculate the cache hit rate for the line marked Line 2:
+
+**Ans**: Same as before. (? not sure)
+
+## 6. AMAT
+
+Recall that AMAT stands for Average Memory Access Time. The main formula for it is:
+
+$$AMAT = Hit \ Time + Miss \ Rate * Miss \ Penalty$$
+
+In a multi-level cache, there are two types of miss rates that we consider for each level.
+
+**Global**: Calculated as the number of accesses that missed at that level divided by the total number of accesses to the cache system.
+**Local**: Calculated as the number of accesses that missed at that level divided by the total number of accesses to that cache level.
+
+### 6.1. An L2$, out of 100 total accesses to the cache system, missed 20 times. What is the global miss rate of L2$?
+
+**Ans**: 20\%.
+
+### 6.2. If L1$ had a miss rate of 50\%, what is the local miss rate of L2$?
+
+Suppose your system consists of:
+
+1. An L1$ that has a hit time of 2 cycles and has a local miss rate of 20\%.
+2. An L2$ that has a hit time of 15 cycles and has a global miss rate of 5\%.
+3. Main memory where accesses take 100 cycles.
+
+**Ans**: Question looks inconsistent because of global miss rate given to L2, but... using the data from 6.1. we have 40\%.
+
+$$ LMR = \frac{L2 \ misses}{L2 \ accesses} = \frac{20}{L1 \ misses} = \frac{20}{0.5 \times accesses} = \frac{20}{50} = 0.4 $$
+
+### 6.3. What is the local miss rate of L2$?
+
+**Ans**: 
+
+$$LMR = \frac{0.05}{0.2} = 0.25$$
+
+### 6.4. What is the AMAT of the system?
+
+**Ans**:
+
+$$AMAT = 2 + 0.2 \times (15 + 0.25 \times 100) = 10 \ cycles$$
+
+### 6.5. Suppose we want to reduce the AMAT of the system to 8 cycles or lower by adding in a L3$. If the L3$ has a local miss rate of 30\%, what is the largest hit time that the L3$ can have?
+
+$$8 = 2 + 0.2 \times (15 + 0.25 \times (HIT \ TIME \ L3 + 0.3 \times 100)) $$
+
+$$HIT \ TIME \ L3 = 30 \ cycles$$
